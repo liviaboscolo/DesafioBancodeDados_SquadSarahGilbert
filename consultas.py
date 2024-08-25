@@ -1,15 +1,16 @@
 import sqlite3
-from datetime import datetime  # Importação do módulo datetime
+from datetime import datetime
 import conexao as conn
 
 def print_consulta(consulta):
+    """Auxiliar para imprimir os resultados de uma consulta."""
     for row in consulta:
         print(row)
 
 ##############################################################################
 # Listar todos os livros disponíveis. | Raquel
 ##############################################################################
-print('Listar todos os livros disponíveis: ')
+print('Listar todos os livros disponíveis:')
 list_books = conn.cursor.execute('''
     SELECT titulo 
     FROM livros 
@@ -28,7 +29,7 @@ print_consulta(list_books)
 ##############################################################################
 # Encontrar todos os livros emprestados no momento. | Livia
 ##############################################################################
-print('\nEncontrar todos os livros emprestados no momento: ')
+print('\nEncontrar todos os livros emprestados no momento:')
 loan_cursor = conn.cursor.execute('''
     SELECT livros.titulo, emprestimos.data_emprestimo, emprestimos.data_devolucao
     FROM emprestimos
@@ -38,31 +39,30 @@ loan_cursor = conn.cursor.execute('''
     WHERE emprestimos.data_devolucao IS NULL
 ''')
 loan_results = loan_cursor.fetchall()
-
 if loan_results:
     print_consulta(loan_results)
 
 ##############################################################################
 # Verificar o número de cópias disponíveis de um determinado livro. | Jéssica
 ##############################################################################
-print('\nVerificar o número de cópias disponíveis de um determinado livro: ')
+print('\nVerificar o número de cópias disponíveis de um determinado livro:')
 var_id_livro = 5  # Alterar conforme necessário
 
 # Consulta para verificar o número de exemplares
-check_exemplares = conn.cursor.execute(f'''
+check_exemplares = conn.cursor.execute('''
     SELECT COUNT(*)
     FROM exemplares
-    WHERE id_livro = {var_id_livro}
-''')
+    WHERE id_livro = ?
+''', (var_id_livro,))
 total_copias = check_exemplares.fetchone()[0]
 
 # Consulta para verificar o número de exemplares emprestados
-check_emprestados = conn.cursor.execute(f'''
+check_emprestados = conn.cursor.execute('''
     SELECT COUNT(*)
     FROM emprestimos
     JOIN exemplares ON emprestimos.id_exemplar = exemplares.id_exemplar
-    WHERE exemplares.id_livro = {var_id_livro} AND emprestimos.data_devolucao IS NULL
-''')
+    WHERE exemplares.id_livro = ? AND emprestimos.data_devolucao IS NULL
+''', (var_id_livro,))
 emprestados = check_emprestados.fetchone()[0]
 
 # Número de cópias disponíveis
@@ -72,7 +72,7 @@ print(f'- Livro id: {var_id_livro}\n- Cópias disponíveis: {disponiveis}')
 ##############################################################################
 # Mostrar os empréstimos em atraso. | Rosana
 ##############################################################################
-print('\nMostrar os empréstimos em atraso: ')
+print('\nMostrar os empréstimos em atraso:')
 data_atual = datetime.now().strftime('%Y-%m-%d')  # Usando datetime para obter a data atual
 emprestimos_atraso = conn.cursor.execute('''
     SELECT livros.titulo, emprestimos.data_emprestimo, emprestimos.prazo_devolucao
@@ -88,3 +88,4 @@ print_consulta(emprestimos_atraso)
 # Fechar a conexão
 conn.conexao.commit()
 conn.conexao.close()
+

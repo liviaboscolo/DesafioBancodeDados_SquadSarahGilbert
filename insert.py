@@ -101,7 +101,7 @@ conn.cursor.execute('''
 
 # Inserção de dados na tabela emprestimos
 conn.cursor.execute('''
-    INSERT INTO emprestimos (id_exemplar, id_usuario, DataEmprestimo, DataDevolucao, DataDevolvido) VALUES
+    INSERT INTO emprestimos (id_exemplar, id_usuario, data_emprestimo, data_devolucao, data_devolvido) VALUES
         (1, 1, '2024-08-20', '2024-08-27', NULL),
         (2, 2, '2024-08-21', '2024-08-28', '2024-08-28'),
         (3, 3, '2024-08-22', '2024-08-29', NULL),

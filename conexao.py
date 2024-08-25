@@ -1,7 +1,11 @@
-import conexao as conn
+import sqlite3
+
+# Conexão com o banco de dados
+conexao = sqlite3.connect('biblioteca.db')
+cursor = conexao.cursor()
 
 # Tabela livros
-conn.cursor.execute('''
+cursor.execute('''
     CREATE TABLE IF NOT EXISTS livros (
         id_livro INTEGER PRIMARY KEY,
         titulo VARCHAR(255) NOT NULL,
@@ -11,7 +15,7 @@ conn.cursor.execute('''
 ''')
 
 # Tabela generos
-conn.cursor.execute('''
+cursor.execute('''
     CREATE TABLE IF NOT EXISTS generos (
         id_genero INTEGER PRIMARY KEY,
         nome VARCHAR(255) NOT NULL
@@ -19,7 +23,7 @@ conn.cursor.execute('''
 ''')
 
 # Tabela livros_generos - relação muitos para muitos
-conn.cursor.execute('''
+cursor.execute('''
     CREATE TABLE IF NOT EXISTS livros_generos (
         id_livro INTEGER NOT NULL,
         id_genero INTEGER NOT NULL,
@@ -30,7 +34,7 @@ conn.cursor.execute('''
 ''')
 
 # Tabela exemplares
-conn.cursor.execute('''
+cursor.execute('''
     CREATE TABLE IF NOT EXISTS exemplares (
         id_exemplar INTEGER PRIMARY KEY,
         id_livro INTEGER,
@@ -39,7 +43,7 @@ conn.cursor.execute('''
 ''')
 
 # Tabela pessoas
-conn.cursor.execute('''
+cursor.execute('''
     CREATE TABLE IF NOT EXISTS pessoas (
         id_pessoa INTEGER PRIMARY KEY,
         nome VARCHAR(255) NOT NULL,
@@ -48,7 +52,7 @@ conn.cursor.execute('''
 ''')
 
 # Tabela usuarios - herda de pessoa
-conn.cursor.execute('''
+cursor.execute('''
     CREATE TABLE IF NOT EXISTS usuarios (
         id_usuario INTEGER NOT NULL,
         id_pessoa INTEGER NOT NULL,
@@ -60,7 +64,7 @@ conn.cursor.execute('''
 ''')
 
 # Tabela autores - herda de pessoa
-conn.cursor.execute('''
+cursor.execute('''
     CREATE TABLE IF NOT EXISTS autores (
         id_autor INTEGER NOT NULL,
         id_pessoa INTEGER NOT NULL,
@@ -70,7 +74,7 @@ conn.cursor.execute('''
 ''')
 
 # Tabela autores_livros (relações muitos para muitos)
-conn.cursor.execute('''
+cursor.execute('''
     CREATE TABLE IF NOT EXISTS autores_livros (
         id_autor INTEGER NOT NULL,
         id_livro INTEGER NOT NULL,
@@ -82,7 +86,7 @@ conn.cursor.execute('''
 ''')
 
 # Tabela emprestimos
-conn.cursor.execute('''
+cursor.execute('''
     CREATE TABLE IF NOT EXISTS emprestimos (
         id_emprestimo INTEGER PRIMARY KEY NOT NULL,
         id_exemplar INTEGER NOT NULL,
@@ -96,5 +100,5 @@ conn.cursor.execute('''
 ''')
 
 # Confirmar mudanças e fechar conexão
-conn.conexao.commit()
-conn.conexao.close()
+conexao.commit()
+conexao.close()
